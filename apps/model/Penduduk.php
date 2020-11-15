@@ -11,7 +11,8 @@
 
         public function getAll()
         {
-            $this->db->query('SELECT *, pek.name as pekerjaan FROM ' . $this->table . ' kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = pek.id_pekerjaan ORDER BY kel.kepala_keluarga ASC');
+            $query = 'SELECT kel.*, pek.name as pekerjaan, kel.kepala_keluarga as kepala_keluarga, kelu.kepala_keluarga as created_by FROM ' . $this->table . ' kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = pek.id_pekerjaan LEFT JOIN keluarga kelu ON kelu.id_keluarga = kel.created_by ORDER BY kel.kepala_keluarga ASC';
+            $this->db->query($query);
             return $this->db->resultSet();
         }
 
@@ -26,6 +27,47 @@
             $query = 'SELECT * FROM ' . $this->table . ' WHERE ' . $this->table . '.no_kk = ' . $nokk;
             
             $this->db->query($query);
+            return $this->db->single();
+        }
+
+        public function insert($data)
+        {
+            $query = "INSERT INTO keluarga VALUES (null, :rules_id, :no_kk, :id_pekerjaan, :kepala_keluarga, :jumlah_keluarga, :jumlah_anak, :rt, :rw, :alamat, :pass, :created_at, :created_by)";
+            
+            $this->db->query($query);
+            $this->db->bind('rules_id',$data['rules_id']);
+            $this->db->bind('no_kk', $data['no_kk']);
+            $this->db->bind('id_pekerjaan', $data['id_pekerjaan']);
+            $this->db->bind('kepala_keluarga',$data['kepala_keluarga']);
+            $this->db->bind('jumlah_keluarga',$data['jumlah_keluarga']);
+            $this->db->bind('jumlah_anak',$data['jumlah_anak']);
+            $this->db->bind('rt',$data['rt']);
+            $this->db->bind('rw',$data['rw']);
+            $this->db->bind('alamat',$data['alamat']);
+            $this->db->bind('pass',$data['pass']);
+            $this->db->bind('created_at',$data['created_at']);
+            $this->db->bind('created_by',$data['created_by']);
+           
+ 
+
+            return $this->db->num_rows();
+        }
+
+        public function delete($id_keluarga)
+        {
+            $query = "DELETE FROM keluarga WHERE id_keluarga = :id_keluarga";
+            $this->db->query($query);
+            $this->db->bind('id_keluarga',$id_keluarga);
+            $this->db->execute();
+            return $this->db->num_rows();
+        }
+
+        public function getDataById($id_keluarga)
+        {
+            $query = "SELECT kel.*, pek.*, pek.name as pekerjaan FROM keluarga kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = kel.id_pekerjaan WHERE id_keluarga = :id_keluarga";
+
+            $this->db->query($query);
+            $this->db->bind('id_keluarga',$id_keluarga);
             return $this->db->single();
         }
 

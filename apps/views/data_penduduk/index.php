@@ -2,11 +2,13 @@
     <ol class="breadcrumb mb-4 mt-4">
         <li class="breadcrumb-item active">Catatan data penduduk</li>
     </ol>
+    <?php if(!empty($_SESSION['userdata'])) : ?>
     <div class="row mb-4">
         <div class="col-sm-6">
             <a href="<?= BASE_URL; ?>datapenduduk/create" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah penduduk</a>
         </div>
     </div>
+    <?php endif; ?>
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table mr-1"></i>

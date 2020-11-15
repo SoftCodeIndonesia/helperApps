@@ -2,7 +2,7 @@
     <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item active">Tambah data penduduk </li>
     </ol>
-    <form action="<?= BASE_URL; ?>datapenduduk/storeCreated" method="post">
+    <form action="<?= BASE_URL; ?>datapenduduk/storeUpdated" method="post">
 <div class="card">
   <div class="card-header">
     Tambah data penduduk
@@ -12,7 +12,7 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label for="nokk">Nomor Kartu Keluarga</label>
-                <input type="number" class="form-control" maxlength="16" id="nokk" name="nokk" autocomplete="off" placeholder="Masukan nomor kartu keluarga" required>
+                <input type="number" class="form-control" value="<?= $data['keluarga']['no_kk'] ?>" maxlength="16" id="nokk" name="nokk" autocomplete="off" placeholder="Masukan nomor kartu keluarga" required>
             </div>
             <div class="form-group  col-sm-6">
                 <label for="kepala_keluarga">Kepala Keluarga</label>

@@ -27,7 +27,7 @@
                 if($user)
                 {
                     
-                    if($user['pass'] == md5($pass)){
+                    if($user['pass'] == md5($pass) && $user['rules_id'] == 1){
                         $_SESSION['userdata'] = $user;
                         $this->redirect(BASE_URL);
                     }else{

@@ -76,4 +76,10 @@
             $this->execute();
             return $this->stmt->rowCount();
         }
+
+        public function insert_id()
+        {
+            $this->execute();
+            return $this->dbh->lastInsertId();
+        }
     }
