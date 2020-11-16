@@ -2,6 +2,9 @@
     <ol class="breadcrumb mb-4 mt-4">
         <li class="breadcrumb-item active">Catatan data penduduk</li>
     </ol>
+    <?php if(!empty($_SESSION['flash'])) : ?>
+    <input type="hidden" name="flash" value="<?= $_SESSION['flash'] ?>">
+    <?php endif; ?>
     <?php if(!empty($_SESSION['userdata'])) : ?>
     <div class="row mb-4">
         <div class="col-sm-6">
@@ -27,8 +30,6 @@
                             <th>Jumlah anak</th>
                             <th>RT</th>
                             <th>RW</th>
-                            <th>Dibuat oleh</th>
-                            <th>Dibuat pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

@@ -1,5 +1,21 @@
 var table = dataTablesCreated();
 
+
+var flash = $('input[name="flash"]').val();
+if (flash) {
+    swal("Success!", "Data berhasil " + flash + "!", "success");
+    $.ajax({
+        type: "POST",
+        url: base_url + "ConfigSet/destroy_session",
+        data: {
+            session: "flash"
+        },
+        dataType: "json",
+
+    });
+}
+
+
 function dataTablesCreated() {
     return $('#table-penduduk').DataTable({
         orderCellsTop: true,
@@ -18,6 +34,7 @@ function dataTablesCreated() {
         },
     });
 }
+
 
 $(document).on("click", "#btn-delete", function (e) {
     var id_keluarga = $(this).data('id');
@@ -65,3 +82,5 @@ function hapus(id_kaluarga) {
         }
     });
 }
+
+

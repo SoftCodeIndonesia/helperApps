@@ -8,13 +8,13 @@
         {
             $this->helper = new Helper;
             $this->db = new Database;
-            $this->form_validation = new FormValidation;
+            
         }
 
         public function index()
         {
             
-            
+            $this->helper->session_destory(["form_error","set_value"]);
             $data['title'] = 'village assistance - Data penduduk';
 
             $data['js'] = [
@@ -43,8 +43,6 @@
                 $penduduk[] = "<th>".$value['jumlah_anak']."</th>";
                 $penduduk[] = "<th>".$value['rt']."</th>";
                 $penduduk[] = "<th>".$value['rw']."</th>";
-                $penduduk[] = "<th>".$value['created_by']."</th>";
-                $penduduk[] = "<th>".date('d M Y',$value['created_at'])."</th>";
                 if(!empty($_SESSION['userdata'])){
                     $penduduk[] = "<th>".$linkUbah. " " . $linkHapus." </th>";
                 }else{
@@ -69,15 +67,12 @@
         {
             if(!empty($_SESSION['userdata']))
             {
-                var_dump($this->form_validation);
-                if($this->form_validation == FALSE)
-                {
-                    $data['js'] = [
-                        'penduduk/tambah.js'
-                    ];
-                    $data['title'] = 'village assistance - tambah';
-                    $this->view('data_penduduk/tambah',$data);
-                }
+                
+                $data['js'] = [
+                    'penduduk/tambah.js'
+                ];
+                $data['title'] = 'village assistance - tambah';
+                $this->view('data_penduduk/tambah',$data);
                 
             }else{
                 $this->redirect('login');
@@ -87,47 +82,54 @@
         public function storeCreated()
         {
             if(!empty($_SESSION['userdata'])){
+                
+                
+                $data['rules_id'] = 2;
+                $data['no_kk'] = $_POST['nokk'];
+                $data['kepala_keluarga'] = htmlspecialchars($_POST['kepala_keluarga']);
+                $data['jumlah_keluarga'] = $_POST['jml_kel'];
+                $data['jumlah_anak'] = $_POST['jumlah_anak'];
+                $data['rt'] = $_POST['rt'];
+                $data['rw'] = $_POST['rw'];
+                $pekerjaan = htmlspecialchars($_POST['pekerjaan']);
+                $data['alamat'] = "" . htmlspecialchars($_POST['alamat']) . "";
+                $data['pass'] = md5('123');
+                $data['created_at'] = (int) time();
+                $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
+                $pekerjaan = $this->model('PekerjaanModel')->getByName(strtolower($pekerjaan));
+                $data['nama_pekerjaan'] = htmlspecialchars($_POST['pekerjaan']);
+                $_SESSION['set_value'] = $data;
+                if(strlen($data['no_kk']) < 16){
+                    $_SESSION['form_error'] = [
+                        'nokk' => "No KK harus berisi 16 karakter"
+                    ];
+                    $this->redirect(BASE_URL . "datapenduduk/create");
+                    return false;
+                }
 
                 
-                if($this->form_validation == FALSE)
-                {
-                    $this->create();
+                if($pekerjaan)
+                {  
+                    
+                    $data['id_pekerjaan'] = $pekerjaan['id_pekerjaan'];
+                    if($this->model('penduduk')->insert($data) > 0){
+                        $_SESSION['flash'] = "ditambahkan";
+                        $this->redirect(BASE_URL . 'datapenduduk');
+                    }
                 }else{
-                    $data['rules_id'] = 2;
-                    $data['no_kk'] = $_POST['nokk'];
-                    $data['kepala_keluarga'] = htmlspecialchars($_POST['kepala_keluarga']);
-                    $data['jumlah_keluarga'] = $_POST['jml_kel'];
-                    $data['jumlah_anak'] = $_POST['jumlah_anak'];
-                    $data['rt'] = $_POST['rt'];
-                    $data['rw'] = $_POST['rw'];
-                    $pekerjaan = htmlspecialchars($_POST['pekerjaan']);
-                    $data['alamat'] = "" . htmlspecialchars($_POST['alamat']) . "";
-                    $data['pass'] = md5('123');
-                    $data['created_at'] = (int) time();
-                    $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
-                    $pekerjaan = $this->model('PekerjaanModel')->getByName(strtolower($pekerjaan));
                     
-
-                    
-                    if($pekerjaan)
-                    {
-                        $data['id_pekerjaan'] = $pekerjaan['id_pekerjaan'];
+                    $pekerjaan['name'] = htmlspecialchars($_POST['pekerjaan']);
+                    $pekerjaan['description'] = '';
+                    $pekerjaan['created_at'] = time();
+                    $pekerjaan['created_by'] = $_SESSION['userdata']['id_keluarga'];
+                    $data['id_pekerjaan'] = $this->model('pekerjaanModel')->insert($pekerjaan);
+                    if($data['id_pekerjaan'] > 0){
                         if($this->model('penduduk')->insert($data) > 0){
+                            $_SESSION['flash'] = "ditambahkan";
                             $this->redirect(BASE_URL . 'datapenduduk');
-                        }
-                    }else{
-                        $pekerjaan['name'] = htmlspecialchars($_POST['pekerjaan']);
-                        $pekerjaan['description'] = '';
-                        $pekerjaan['created_at'] = time();
-                        $pekerjaan['created_by'] = $_SESSION['userdata']['id_keluarga'];
-                        $data['id_pekerjaan'] = $this->model('pekerjaanModel')->insert($pekerjaan);
-                        if($data['id_pekerjaan'] > 0){
-                            if($this->model('penduduk')->insert($data) > 0){
-                                $this->redirect(BASE_URL . 'datapenduduk');
-                            }else{
-                                echo "<script>alert('data gagal ditambahkan')</script>";
-                                $this->redirect(BASE_URL . 'datapenduduk/create');
-                            }
+                        }else{
+                            echo "<script>alert('data gagal ditambahkan')</script>";
+                            $this->redirect(BASE_URL . 'datapenduduk/create');
                         }
                     }
                 }
@@ -158,8 +160,108 @@
         public function edit($id_keluarga)
         {
             $data['keluarga'] = $this->model('penduduk')->getDataById($id_keluarga);
+            $_SESSION['no_kk'] = $data['keluarga']['no_kk'];
+            $data['js'] = [
+                'penduduk/tambah.js'
+            ];
             $data['title'] = "Village Assistance - update";
             $this->view('data_penduduk/ubah',$data);
+        }
+
+        public function storeUpdated()
+        {      
+            $id_keluarga = $_POST['id_keluarga'];
+
+
+            $data['no_kk'] = $_POST['nokk'];
+            $data['kepala_keluarga'] = htmlspecialchars($_POST['kepala_keluarga']);
+            $data['jumlah_keluarga'] = $_POST['jml_kel'];
+            $data['jumlah_anak'] = $_POST['jumlah_anak'];
+            $data['rt'] = $_POST['rt'];
+            $data['rw'] = $_POST['rw'];
+            $pekerjaan = htmlspecialchars($_POST['pekerjaan']);
+            $data['alamat'] = "" . htmlspecialchars($_POST['alamat']) . "";
+            $data['created_at'] = (int) time();
+            $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
+            $pekerjaan = $this->model('PekerjaanModel')->getByName(strtolower($pekerjaan));
+            $data['nama_pekerjaan'] = htmlspecialchars($_POST['pekerjaan']);
+
+
+            if($data['no_kk'] == $_SESSION['no_kk']){
+                if($pekerjaan)
+                        {  
+                            
+                            $data['id_pekerjaan'] = $pekerjaan['id_pekerjaan'];
+                            if($this->model('penduduk')->update($data,$id_keluarga) > 0){
+                                $_SESSION['flash'] = "diubah";
+                                unset($_SESSION['no_kk']);
+                                $this->redirect(BASE_URL . 'datapenduduk');
+                            }
+                        }else{
+                            
+                            $pekerjaan['name'] = htmlspecialchars($_POST['pekerjaan']);
+                            $pekerjaan['description'] = '';
+                            $pekerjaan['created_at'] = time();
+                            $pekerjaan['created_by'] = $_SESSION['userdata']['id_keluarga'];
+                            $data['id_pekerjaan'] = $this->model('pekerjaanModel')->insert($pekerjaan);
+                            if($data['id_pekerjaan'] > 0){
+                                if($this->model('penduduk')->update($data,$id_keluarga) > 0){
+                                    $_SESSION['flash'] = "diubah";
+                                    unset($_SESSION['no_kk']);
+                                    $this->redirect(BASE_URL . 'datapenduduk');
+                                }else{
+                                    echo "<script>alert('data gagal ditambahkan')</script>";
+                                    $this->redirect(BASE_URL . "datapenduduk/edit/" . $id_keluarga);
+                                }
+                            }
+                        }
+            }else{
+                if(strlen($data['no_kk']) < 16){
+                    $_SESSION['form_error'] = [
+                        'nokk' => "No KK harus berisi 16 karakter"
+                    ];
+                    $this->redirect(BASE_URL . "datapenduduk/edit/" . $id_keluarga);
+                    return false;
+                }else{
+                    $data_keluarga = $this->model('penduduk')->getByNoKK($data['no_kk']);
+                    
+                    if($data_keluarga){
+                        $_SESSION['form_error'] = [
+                            'nokk' => "No KK sudah ada"
+                        ];
+                        $this->redirect(BASE_URL . "datapenduduk/edit/" . $id_keluarga);
+                        return false;
+                    }else{
+                        if($pekerjaan)
+                        {  
+                            
+                            $data['id_pekerjaan'] = $pekerjaan['id_pekerjaan'];
+                            if($this->model('penduduk')->update($data,$id_keluarga) > 0){
+                                $_SESSION['flash'] = "diubah";
+                                unset($_SESSION['no_kk']);
+                                $this->redirect(BASE_URL . 'datapenduduk');
+                            }
+                        }else{
+                            
+                            $pekerjaan['name'] = htmlspecialchars($_POST['pekerjaan']);
+                            $pekerjaan['description'] = '';
+                            $pekerjaan['created_at'] = time();
+                            $pekerjaan['created_by'] = $_SESSION['userdata']['id_keluarga'];
+                            $data['id_pekerjaan'] = $this->model('pekerjaanModel')->insert($pekerjaan);
+                            if($data['id_pekerjaan'] > 0){
+                                if($this->model('penduduk')->update($data,$id_keluarga) > 0){
+                                    $_SESSION['flash'] = "diubah";
+                                    unset($_SESSION['no_kk']);
+                                    $this->redirect(BASE_URL . 'datapenduduk');
+                                }else{
+                                    echo "<script>alert('data gagal ditambahkan')</script>";
+                                    $this->redirect(BASE_URL . "datapenduduk/edit/" . $id_keluarga);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     
