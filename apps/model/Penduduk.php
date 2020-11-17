@@ -93,7 +93,7 @@
 
         public function getDataById($id_keluarga)
         {
-            $query = "SELECT kel.*, pek.*, pek.name as pekerjaan FROM keluarga kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = kel.id_pekerjaan WHERE id_keluarga = :id_keluarga";
+            $query = "SELECT kel.*, pek.*, pek.name as pekerjaan, kel.id_pekerjaan as keluarga_id_pekerjaan FROM keluarga kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = pek.id_pekerjaan WHERE id_keluarga = :id_keluarga";
 
             $this->db->query($query);
             $this->db->bind('id_keluarga',$id_keluarga);

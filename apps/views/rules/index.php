@@ -4,7 +4,9 @@
     </ol>
     <div class="row mb-4">
         <div class="col-sm-6">
-            <a href="http://" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah pengurus</a>
+        <?php if(!empty($_SESSION['userdata'])) : ?>
+            <a href="" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah pengurus</a>
+        <?php endif; ?>
         </div>
     </div>
     <div class="card mb-4">
@@ -14,14 +16,12 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="table-pengurus" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>nama</th>
                             <th>Description</th>
-                            <th>Dibuat oleh</th>
-                            <th>Dibuat pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

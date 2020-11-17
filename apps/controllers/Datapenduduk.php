@@ -58,7 +58,7 @@
                 "recordsFiltered" => $this->model('penduduk')->count_filtered(),
                 "data" => $dataPenduduk,
             );
-            // var_dump($dataPen)
+
             echo json_encode($output);
             exit();
         }

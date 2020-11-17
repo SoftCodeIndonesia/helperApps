@@ -1,5 +1,23 @@
 var table = dataTablesCreated();
 
+function dataTablesCreated() {
+    return $('#table-pekerjaan').DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
+        "ordering": false,
+        "order": [],
+        "columnDefs": [{
+            "targets": 'no-sort',
+            "orderable": false
+        }],
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": base_url + "/pekerjaan/allDataPekerjaan",
+            "type": "POST"
+        },
+    });
+}
 
 var flash = $('input[name="flash"]').val();
 if (flash) {
@@ -16,28 +34,8 @@ if (flash) {
 }
 
 
-function dataTablesCreated() {
-    return $('#table-penduduk').DataTable({
-        orderCellsTop: true,
-        fixedHeader: true,
-        "ordering": false,
-        "order": [],
-        "columnDefs": [{
-            "targets": 'no-sort',
-            "orderable": false
-        }],
-        "processing": true,
-        "serverSide": true,
-        "ajax": {
-            "url": base_url + "/datapenduduk/getData",
-            "type": "POST"
-        },
-    });
-}
-
-
 $(document).on("click", "#btn-delete", function (e) {
-    var id_keluarga = $(this).data('id');
+    var id_pekerjaan = $(this).data('id');
     e.preventDefault();
     swal({
         title: "Apakah anda yakin?",
@@ -51,9 +49,9 @@ $(document).on("click", "#btn-delete", function (e) {
                 table.destroy();
                 $.ajax({
                     type: "POST",
-                    url: base_url + "datapenduduk/delete",
+                    url: base_url + "pekerjaan/delete",
                     data: {
-                        id_keluarga: id_kaluarga
+                        id_pekerjaan: id_pekerjaan
                     },
                     dataType: "json",
                     success: function (response) {
@@ -78,7 +76,3 @@ $(document).on("click", "#btn-delete", function (e) {
             }
         });
 });
-
-
-
-
