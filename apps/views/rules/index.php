@@ -5,7 +5,7 @@
     <div class="row mb-4">
         <div class="col-sm-6">
         <?php if(!empty($_SESSION['userdata'])) : ?>
-            <a href="" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah pengurus</a>
+            <a href="<?= BASE_URL ?>Rules/tambah" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah pengurus</a>
         <?php endif; ?>
         </div>
     </div>

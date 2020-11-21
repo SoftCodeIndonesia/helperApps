@@ -56,4 +56,15 @@
             $this->db->query('SELECT * FROM ' . $this->table);
             return $this->db->num_rows();
         }
+
+        public function setRules($data,$id_keluarga)
+        {
+            $query = "UPDATE keluarga SET rules_id = :rules_id WHERE id_keluarga = :id_keluarga";
+
+            $this->db->query($query);
+            $this->db->bind('rules_id',$data['rules_id']);
+            $this->db->bind('id_keluarga',$id_keluarga);
+
+            return $this->db->num_rows();
+        }
     }

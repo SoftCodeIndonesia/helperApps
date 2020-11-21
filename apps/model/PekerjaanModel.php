@@ -31,7 +31,7 @@
 
             $query = $query . " ORDER BY  pek.id_pekerjaan ASC";
             $this->db->query($query);
-
+            
             if(strlen($_POST['search']['value']) > 0)
             {
                 foreach ($this->column_search as $column) {
