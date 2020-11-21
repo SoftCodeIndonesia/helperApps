@@ -4,7 +4,7 @@
     </ol>
     <div class="row mb-4">
         <div class="col-sm-6">
-            <a href="http://" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah catatan</a>
+            <a href="<?= BASE_URL ?>catatanbantuan/tambah" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah catatan</a>
         </div>
     </div>
     <div class="card mb-4">
@@ -22,8 +22,6 @@
                             <th>Periode</th>
                             <th>Jumlah penerima</th>
                             <th>Deskripsi</th>
-                            <th>Dibuat oleh</th>
-                            <th>Dibuat pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

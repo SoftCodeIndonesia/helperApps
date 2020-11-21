@@ -75,5 +75,43 @@
 
             return $this->db->num_rows();
         }
+
+        public function update($data,$id)
+        {
+            $query = "UPDATE kategori_bantuan SET name = :name, description = :description, created_at = :created_at, created_by = :created_by WHERE id_kategori_bantuan = :id_kategori_bantuan";
+
+            $this->db->query($query);
+
+            $this->db->bind('id_kategori_bantuan',$id);
+            $this->db->bind('name',$data['name']);
+            $this->db->bind('description',$data['description']);
+            $this->db->bind('created_at',$data['created_at']);
+            $this->db->bind('created_by',$data['created_by']);
+
+            return $this->db->num_rows();
+
+        }
+
+        public function getById($id_kategori)
+        {
+            $query = "SELECT * FROM kategori_bantuan WHERE id_kategori_bantuan = :id_kategori_bantuan";
+
+            $this->db->query($query);
+
+            $this->db->bind('id_kategori_bantuan',$id_kategori);
+
+            return $this->db->single();
+        }
+
+        public function delete($id)
+        {
+            $query = "DELETE FROM kategori_bantuan WHERE id_kategori_bantuan = :id_kategori_bantuan";
+
+            $this->db->query($query);
+
+            $this->db->bind('id_kategori_bantuan',$id);
+
+            return $this->db->num_rows();
+        }
     }
     
