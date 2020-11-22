@@ -22,19 +22,24 @@
             $dataRules = [];
             $no = 1;
             foreach ($rules as $value) {
-                $data = [];
+                if($value['rules_id'] == 1)
+                {
+                    $data = [];
 
-                $linkHapus = '<a href="' . BASE_URL . 'Rules/setRules/'. $value['id_keluarga'] .'/2" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_keluarga'].'">Batalkan</a>';
-                $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
-                $data[] = "<th>". $no++ ."</th>";
-                $data[] = "<th>".$value['name']."</th>";
-                $data[] = "<th>".$value['description']."</th>";
-                if(!empty($_SESSION['userdata'])){
-                    $data[] = "<th class='text-center'>". $linkHapus."</th>";
-                }else{
-                    $data[] = "<th>".$linkLogin."</th>";
+                    $linkHapus = '<a href="' . BASE_URL . 'Rules/setRules/'. $value['id_keluarga'] .'/2" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_keluarga'].'">Batalkan</a>';
+                    $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
+                    $data[] = "<th>". $no++ ."</th>";
+                    $data[] = "<th>".$value['name']."</th>";
+                    $data[] = "<th>".$value['description']."</th>";
+                    $data[] = "<th>".$value['created_by']."</th>";
+                    $data[] = "<th>".$value['created_at']."</th>";
+                    if(!empty($_SESSION['userdata'])){
+                        $data[] = "<th class='text-center'>". $linkHapus."</th>";
+                    }else{
+                        $data[] = "<th>".$linkLogin."</th>";
+                    }
+                    $dataRules[] = $data;
                 }
-                $dataRules[] = $data;
             }
 
             $output = array(

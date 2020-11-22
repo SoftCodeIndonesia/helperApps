@@ -4,7 +4,7 @@
         private $table = 'keluarga';
         private $db;
 
-        var $column_search = ["kel.no_kk","kel.kepala_keluarga","pek.name","kel.jumlah_keluarga","kel.jumlah_anak","kel.rt","kel.rw"];
+        var $column_search = ["kel.no_kk","kel.kepala_keluarga","pek.name","kel.jumlah_keluarga","kel.jumlah_anak","kel.rt","kel.rw","kel.kepala_keluarga","kel.created_at"];
 
         public function __construct()
         {
@@ -13,7 +13,7 @@
 
         public function getAll()
         {
-            $query = 'SELECT kel.*, pek.name as pekerjaan, kel.kepala_keluarga as kepala_keluarga, kelu.kepala_keluarga as created_by FROM ' . $this->table . ' kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = pek.id_pekerjaan LEFT JOIN keluarga kelu ON kelu.id_keluarga = kel.created_by';
+            $query = "SELECT kel.*, pek.name as pekerjaan, kel.kepala_keluarga as kepala_keluarga, kelu.kepala_keluarga as created_by,from_unixtime(kel.created_at,'%d %M %Y') as created_at FROM keluarga kel LEFT JOIN pekerjaan pek ON kel.id_pekerjaan = pek.id_pekerjaan LEFT JOIN keluarga kelu ON kelu.id_keluarga = kel.created_by";
 
     
             if(strlen($_POST['search']['value']) > 0)
@@ -22,9 +22,9 @@
                 foreach ($this->column_search as $key => $column) {
                     $explode = explode('.',$column);
                     if($key + 1 == count($this->column_search)){
-                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ", '%')";
+                        $query = $query . " from_unixtime(". $column .",'%d %M %Y') LIKE CONCAT(:" . $explode[1] . ")";
                     }else{
-                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ", '%') OR ";
+                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ") OR ";
                     }
                     
                 }
@@ -39,7 +39,7 @@
             {
                 foreach ($this->column_search as $column) {
                     $explode = explode('.',$column);
-                    $this->db->bind($explode[1], $_POST['search']['value']);
+                    $this->db->bind($explode[1], '%'.$_POST['search']['value'].'%');
                 }
             }
             return $this->db->resultSet();

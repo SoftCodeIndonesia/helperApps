@@ -4,7 +4,7 @@
     {
         private $db;
         private $table = 'kategori_bantuan';
-        var $column_search = ['kat.name','kat.description'];
+        var $column_search = ['kat.name','kat.description','kel.kepala_keluarga','kat.created_at'];
 
 
         public function __construct()
@@ -14,7 +14,7 @@
 
         public function getAllData()
         {
-            $query = "SELECT * FROM kategori_bantuan kat LEFT JOIN keluarga kel ON kel.id_keluarga = kat.created_by";
+            $query = "SELECT *,from_unixtime(kat.created_at,'%d %M %Y') as created_at,kel.kepala_keluarga as created_by FROM kategori_bantuan kat LEFT JOIN keluarga kel ON kel.id_keluarga = kat.created_by";
 
             if($_POST['search']['value'] !== '')
             {
@@ -22,15 +22,15 @@
                 foreach ($this->column_search as $key => $column) {
                     $explode = explode('.',$column);
                     if($key + 1 == count($this->column_search)){
-                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ", '%%')";
+                        $query = $query . " from_unixtime(". $column .",'%d %M %Y') LIKE CONCAT(:" . $explode[1] . ")";
                     }else{
-                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ", '%%') OR ";
+                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ") OR ";
                     }
                     
                 }
             }
 
-            $query = $query . " ORDER BY  kat.id_kategori_bantuan ASC";
+            $query = $query . " ORDER BY kat.id_kategori_bantuan ASC";
             
             $this->db->query($query);
             
@@ -38,7 +38,7 @@
             {
                 foreach ($this->column_search as $column) {
                     $explode = explode('.',$column);
-                    $this->db->bind($explode[1], $_POST['search']['value']);
+                    $this->db->bind($explode[1], '%'.$_POST['search']['value'].'%');
                 }
             }
             return $this->db->resultSet();

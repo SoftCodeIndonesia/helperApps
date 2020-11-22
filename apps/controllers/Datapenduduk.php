@@ -43,6 +43,8 @@
                 $penduduk[] = "<th>".$value['jumlah_anak']."</th>";
                 $penduduk[] = "<th>".$value['rt']."</th>";
                 $penduduk[] = "<th>".$value['rw']."</th>";
+                $penduduk[] = "<th>".$value['created_by']."</th>";
+                $penduduk[] = "<th>".$value['created_at']."</th>";
                 if(!empty($_SESSION['userdata'])){
                     $penduduk[] = "<th>".$linkUbah. " " . $linkHapus." </th>";
                 }else{

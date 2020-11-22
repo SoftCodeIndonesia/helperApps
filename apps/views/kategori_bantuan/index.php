@@ -25,6 +25,8 @@
                             <th>No</th>
                             <th>nama bantuan</th>
                             <th>Descripsi</th>
+                            <th>Dibuat oleh</th>
+                            <th>Dibuat Tgl</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

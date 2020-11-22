@@ -12,18 +12,18 @@
     
         <div class="row">
             <div class="form-group col-sm-6">
-                <label for="exampleFormControlSelect1">jenis bantuan</label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                <label for="jenis">jenis bantuan</label>
+                <select class="form-control" id="jenis" name="kategori">
+                    <?php foreach($data['kategori'] as $value) : ?>
+                        <option value="<?= $value['id_kategori_bantuan'] ?>"><?= $value['name'] ?></option>
+                    <?php endforeach; ?>
                 </select>
+                
             </div>
             <div class="form-group  col-sm-6">
                 <label for="periode">Periode</label>
-                <textarea class="form-control" name="periode" id="periode" rows="3"><?= $this->helper->set_value('description') ?></textarea>
+                <input type="date" class="form-control" required autocomplete="off" name="periode">
+                <p class="text-danger font-italic"> <?= $this->helper->form_error("periode") ?> </p>
             </div>
         </div>
         <div class="row">

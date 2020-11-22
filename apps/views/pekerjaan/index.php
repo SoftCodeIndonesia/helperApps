@@ -25,6 +25,8 @@
                             <th>No</th>
                             <th>Pekerjaan</th>
                             <th>Description</th>
+                            <th>Dibuat oleh</th>
+                            <th>Dibuat Tgl</th>
                             <th width="20%">Aksi</th>
                         </tr>
                     </thead>

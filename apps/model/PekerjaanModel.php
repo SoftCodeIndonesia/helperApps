@@ -4,7 +4,7 @@
 
         private $table = 'pekerjaan';
         private $db;
-        var $column_search = ['pek.name','pek.description'];
+        var $column_search = ['pek.name','pek.description','kel.kepala_keluarga','pek.created_at'];
 
         public function __construct()
         {
@@ -13,7 +13,7 @@
 
         public function getAllData()
         {
-            $query = "SELECT pek.*,kel.*, pek.id_pekerjaan as id_pekerjaan FROM pekerjaan pek LEFT JOIN keluarga kel ON kel.id_keluarga = pek.created_by";
+            $query = "SELECT pek.*,kel.*, pek.id_pekerjaan as id_pekerjaan, from_unixtime(pek.created_at,'%d %M %Y') as created_at, kel.kepala_keluarga as created_by FROM pekerjaan pek LEFT JOIN keluarga kel ON kel.id_keluarga = pek.created_by";
 
             if($_POST['search']['value'] !== '')
             {
@@ -21,9 +21,9 @@
                 foreach ($this->column_search as $key => $column) {
                     $explode = explode('.',$column);
                     if($key + 1 == count($this->column_search)){
-                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ", '%')";
+                        $query = $query . " from_unixtime(". $column .",'%d %M %Y') LIKE CONCAT(:" . $explode[1] . ")";
                     }else{
-                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ", '%') OR ";
+                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ") OR ";
                     }
                     
                 }
@@ -36,7 +36,7 @@
             {
                 foreach ($this->column_search as $column) {
                     $explode = explode('.',$column);
-                    $this->db->bind($explode[1], $_POST['search']['value']);
+                    $this->db->bind($explode[1], '%'.$_POST['search']['value'].'%');
                 }
             }
             return $this->db->resultSet();

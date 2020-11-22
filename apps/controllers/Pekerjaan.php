@@ -31,6 +31,8 @@
                 $data[] = "<th>". $no++ ."</th>";
                 $data[] = "<th>".$value['name']."</th>";
                 $data[] = "<th>".$value['description']."</th>";
+                $data[] = "<th>".$value['created_by']."</th>";
+                $data[] = "<th>".$value['created_at']."</th>";
                 if(!empty($_SESSION['userdata'])){
                     $data[] = "<th class='text-center'>" . $linkUbah ." ". $linkHapus."</th>";
                 }else{

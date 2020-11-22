@@ -30,6 +30,8 @@
                             <th>Jumlah anak</th>
                             <th>RT</th>
                             <th>RW</th>
+                            <th>Dibuat oleh</th>
+                            <th>Dibuat Tgl</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

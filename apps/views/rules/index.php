@@ -22,6 +22,8 @@
                             <th>No</th>
                             <th>nama</th>
                             <th>Description</th>
+                            <th>Dibuat oleh</th>
+                            <th>Dibuat Tgl</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
