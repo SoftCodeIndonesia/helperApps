@@ -28,8 +28,8 @@
             foreach ($catatan as $value) {
                 $data = [];
 
-                $linkUbah = '<a href="' . BASE_URL . 'catatan/edit/'. $value['id_bantuan'] .'" class="btn btn-sm btn-warning">ubah</a>';
-                $linkHapus = '<a href="' . BASE_URL . 'catatan/delete/'. $value['id_bantuan'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_bantuan'].'">hapus</a>';
+                $linkUbah = '<a href="' . BASE_URL . 'catatanbantuan/ubah/'. $value['id_bantuan'] .'" class="btn btn-sm btn-warning">ubah</a>';
+                $linkHapus = '<a href="' . BASE_URL . 'catatanbantuan/delete/'. $value['id_bantuan'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_bantuan'].'">hapus</a>';
                 $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
                 $data[] = "<th>". $no++ ."</th>";
                 $data[] = "<th>".$value['name']."</th>";
@@ -94,6 +94,75 @@
                     $this->redirect(BASE_URL . 'catatanbantuan');
                 }
             }
+        }
+
+
+        public function ubah($id_catatan)
+        {
+            if($_SESSION['userdata'])
+            {
+                $data['title'] = 'Village Assistance - ubah data';
+                $data['kategori'] = $this->model->getKategoriBantuan();
+                $data['catatan'] = $this->model->getById($id_catatan);
+                $this->view('catatan_bantuan/ubah',$data);
+            }else{
+                $this->redirect(BASE_URL . "login");
+            }
+        }
+
+        public function storeUpdate()
+        {
+            $id_catatan = $_POST['id_bantuan'];
+            $data['id_kategori_bantuan'] = $_POST['kategori'];
+            $data['periode'] = strtotime($_POST['periode']);
+            $data['description'] = $_POST['description'];
+            $data['created_at'] = time();
+            $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
+
+            $kategori = $this->model('kategoriBantuanModel')->getById($data['id_kategori_bantuan']);
+
+
+            $catatan = $this->model->getByPeriodeAndName($data['id_kategori_bantuan'],$data['periode']);
+
+            if($catatan)
+            {
+                
+
+                if($catatan['id_bantuan'] == $id_catatan)
+                {
+                    if($this->model->update($data,$id_catatan) > 0)
+                    {
+                        $_SESSION['flash'] = 'berhasil diubah';
+                        $this->redirect(BASE_URL . 'catatanbantuan');
+                    }else{
+                        $_SESSION['flash'] = 'gagal diubah';
+                        $this->redirect(BASE_URL . 'catatanbantuan');
+                    }
+                }else{
+                    $_SESSION['set_value'] = $data;
+                    $_SESSION['form_error'] = [
+                        'periode' => $kategori['name'] . ' periode ' . date('Y-M-d',$data['periode']) . ' sudah ada!',
+                    ];
+                    $this->redirect(BASE_URL . "catatanbantuan/ubah/" . $id_catatan);
+                }
+            }else{
+                if($this->model->update($data,$id_catatan) > 0)
+                {
+                    $_SESSION['flash'] = 'berhasil diubah';
+                    $this->redirect(BASE_URL . 'catatanbantuan');
+                }else{
+                    $_SESSION['flash'] = 'gagal diubah';
+                    $this->redirect(BASE_URL . 'catatanbantuan');
+                }
+            }
+        }
+
+
+        public function delete()
+        {
+            $id_bantuan = $_POST['id_bantuan'];
+
+            echo json_encode($this->model->delete($id_bantuan));
         }
     }
     

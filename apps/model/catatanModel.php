@@ -85,4 +85,43 @@
             return $this->db->num_rows();
         }
 
+        public function getById($id_catatan)
+        {
+            $query = "SELECT *,kat.name as name, ban.description as description, ban.id_bantuan as id_bantuan,kel.kepala_keluarga as created_by FROM bantuan ban LEFT JOIN kategori_bantuan kat ON ban.id_kategori_bantuan = kat.id_kategori_bantuan LEFT JOIN keluarga kel ON kel.id_keluarga = ban.created_by LEFT JOIN penerima_bantuan pen ON pen.id_bantuan = ban.id_bantuan WHERE ban.id_bantuan = :id_bantuan";
+
+            $this->db->query($query);
+
+            $this->db->bind('id_bantuan',$id_catatan);
+
+            return $this->db->single();
+        }
+
+        public function update($data,$id_catatan)
+        {
+            $query = "UPDATE bantuan SET id_kategori_bantuan = :id_kategori_bantuan, periode = :periode, description = :description, created_at = :created_at, created_by = :created_by WHERE id_bantuan = :id_bantuan";
+
+            $this->db->query($query);
+
+            $this->db->bind('id_kategori_bantuan',$data['id_kategori_bantuan']);
+            $this->db->bind('periode',$data['periode']);
+            $this->db->bind('description',$data['description']);
+            $this->db->bind('created_at',$data['created_at']);
+            $this->db->bind('created_by',$data['created_by']);
+            $this->db->bind('id_bantuan',$id_catatan);
+
+            return $this->db->num_rows();
+        }
+
+
+        public function delete($id_bantuan)
+        {
+            $query = "DELETE FROM bantuan WHERE id_bantuan = :id_bantuan";
+
+            $this->db->query($query);
+
+            $this->db->bind('id_bantuan',$id_bantuan);
+
+            return $this->db->num_rows();
+        }
+
     }

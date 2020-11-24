@@ -123,4 +123,12 @@
                 $this->redirect(BASE_URL . 'Rules/tambah');
             }
         }
+
+        public function setRulesForIndexPage()
+        {
+            $id_keluarga = $_POST['id_keluarga'];
+            $data['rules_id'] = 2;
+
+            echo json_encode($this->model('RulesModel')->setRules($data,$id_keluarga));
+        }
     }

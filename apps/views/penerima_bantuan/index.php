@@ -4,7 +4,7 @@
     </ol>
     <div class="row mb-4">
         <div class="col-sm-6">
-            <a href="http://" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah penerima</a>
+            <a href="<?= BASE_URL ?>penerimabantuan/tambah" class="btn btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> tambah penerima</a>
         </div>
     </div>
     <div class="card mb-4">

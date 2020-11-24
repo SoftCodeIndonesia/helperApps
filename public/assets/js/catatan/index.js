@@ -33,3 +33,46 @@ if (flash) {
 
     });
 }
+
+$(document).on("click", "#btn-delete", function (e) {
+    var id_catatan = $(this).data('id');
+    e.preventDefault();
+    swal({
+        title: "Apakah anda yakin?",
+        text: "data akan dihapus secara permanen",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                table.destroy();
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "catatanbantuan/delete",
+                    data: {
+                        id_bantuan: id_catatan
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response > 0) {
+                            swal("Data berhasil dihapus!", {
+                                icon: "success",
+                            });
+
+                            table = dataTablesCreated();
+                        } else {
+
+                            swal("Data gagal dihapus!", {
+                                icon: "warning",
+                            });
+
+                            table = dataTablesCreated();
+
+                        }
+                    }
+                });
+
+            }
+        });
+});

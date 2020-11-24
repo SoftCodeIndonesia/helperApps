@@ -4,7 +4,14 @@
            
             <ul class="navbar-nav ml-auto ">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="<?= BASE_URL; ?>dist/#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <a class="nav-link dropdown-toggle" id="userDropdown" href="<?= BASE_URL; ?>dist/#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i>
+                    <?php 
+                        if(!empty($_SESSION['userdata']))
+                        {
+                            echo $_SESSION['userdata']['kepala_keluarga'];
+                        }
+                    ?>
+                    </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="<?= BASE_URL; ?>dist/#">Settings</a>
                         <a class="dropdown-item" href="<?= BASE_URL; ?>dist/#">Activity Log</a>

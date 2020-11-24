@@ -14,7 +14,7 @@
 
         public function getAllData()
         {
-            $query = "SELECT rule.*,kel.*,kel.kepala_keluarga as name,from_unixtime(rule.created_at,'%d %M %Y') as created_at,kel.kepala_keluarga as created_by FROM rules_users rule LEFT JOIN keluarga kel ON kel.rules_id = rule.id_rules";
+            $query = "SELECT rule.*,kel.*,kel.kepala_keluarga as name,from_unixtime(rule.created_at,'%d %M %Y') as created_at,kel.kepala_keluarga as created_by, kel.id_keluarga as id_keluarga FROM rules_users rule LEFT JOIN keluarga kel ON kel.rules_id = rule.id_rules";
 
             if(!empty($_POST['search']) && $_POST['search']['value'] !== '')
             {
