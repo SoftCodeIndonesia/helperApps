@@ -1,8 +1,14 @@
+
 <div class="container-fluid">
     <ol class="breadcrumb mb-4 mt-4">
         <li class="breadcrumb-item active">Penerima bantuan</li>
     </ol>
-    <form>
+    <?php if(!empty($_SESSION['flash'])) :?>
+    <div class="alert alert-danger" role="alert">
+        <?= $_SESSION['flash'] ?>
+    </div>
+    <?php endif; ?>
+    <form action="<?= BASE_URL ?>penerimabantuan/storeCreated" method="POST" enctype="multipart/form-data">
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table mr-1"></i>
@@ -13,23 +19,27 @@
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="jenis_bantuan">Jenis Bantuan</label>
-                        <input type="hidden" class="form-control" id="id_bantuan" name="id_bantuan" placeholder="Pilih jenis bantuan" >
-                        <input type="text" class="form-control input-modal" id="jenis_bantuan" name="bantuan" placeholder="Pilih jenis bantuan" data-modal="bantuan" readonly data-toggle="modal">
+                        <input type="hidden" class="form-control" id="id_bantuan" value="<?= $this->helper->set_value('id_bantuan') ?>" name="id_bantuan" placeholder="Pilih jenis bantuan" >
+                        <input type="text" class="form-control input-modal" id="jenis_bantuan" name="bantuan" placeholder="Pilih jenis bantuan" value="<?= $this->helper->set_value('bantuan') ?>" data-modal="bantuan" readonly data-toggle="modal" required>
+                        <p class="text-danger font-italic" id="alert-jenis-bantuan"></p>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="periode">Periode</label>
-                        <input type="text" class="form-control input-modal" id="periode" name="periode" placeholder="periode bantuan" data-modal="bantuan" readonly>
+                        <input type="text" class="form-control input-modal" id="periode" name="periode" placeholder="periode bantuan" value="<?= $this->helper->set_value('periode') ?>" data-modal="bantuan" readonly>
+                        <p class="text-danger font-italic" id="alert-periode"></p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="no_kk">No KK</label>
-                        <input type="hidden" class="form-control" id="id_keluarga" name="id_keluarga" placeholder="Pilih jenis bantuan">
-                        <input type="text" class="form-control input-modal" id="no_kk" name="no_kk" placeholder="pilih No KK" data-modal="penduduk" readonly>
+                        <input type="hidden" class="form-control" value="<?= $this->helper->set_value('id_keluarga') ?>" id="id_keluarga" name="id_keluarga" placeholder="Pilih jenis bantuan">
+                        <input type="text" class="form-control input-modal" value="<?= $this->helper->set_value('no_kk') ?>" id="no_kk" name="no_kk" placeholder="pilih No KK" data-modal="penduduk" readonly required>
+                        <p class="text-danger font-italic" id="alert-nokk"></p>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="keluarga">Keluarga</label>
-                        <input type="text" class="form-control input-modal" name="keluarga" id="keluarga" placeholder="periode bantuan" data-modal="penduduk" readonly>
+                        <input type="text" class="form-control input-modal" name="keluarga" id="keluarga" placeholder="periode bantuan" value="<?= $this->helper->set_value('keluarga') ?>" data-modal="penduduk" readonly required>
+                        <p class="text-danger font-italic" id="alert-keluarga"></p>
                     </div>
                 </div>
                 <div class="row">
@@ -37,13 +47,13 @@
                         <label for="status">Status penerima</label>
                         <select class="form-control" id="status" name="status">
                             <?php foreach($data['status_penerima'] as $status) : ?>
-                                <option value="<?= $status ?>"><?= $status ?></option>
+                                <option value="<?= $status['value'] ?>"><?= $status['name'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="tgl_terima">Tanggal Terima</label>
-                        <input type="date" class="form-control" id="tgl_terima" placeholder="periode bantuan">
+                        <input type="date" class="form-control" id="tgl_terima" value="<?= date('Y-m-d', $this->helper->set_value('tgl_terima')) ?>" name="tgl_terima" placeholder="periode bantuan" required>
                     </div>
                 </div>
                 <div class="row">
@@ -74,6 +84,9 @@
                         </label>
                        <input type="file" name="bukti_terima" style="display: none" id="bukti_terima">
                     </div>
+                    <div class="col-sm-12">
+                        <p class="text-danger font-italic"><?= $this->helper->form_error("file") ?></p>
+                    </div>
                 </div>
                 
             
@@ -84,7 +97,7 @@
                     <a href="" class="btn btn-sm btn-danger">Batal</a>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <button class="btn btn-sm btn-primary">Simpan</button>
+                    <button class="btn btn-sm btn-primary" type="submit" id="btn-simpan">Simpan</button>
                 </div>
             </div>
         </div>

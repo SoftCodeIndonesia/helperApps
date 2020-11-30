@@ -18,7 +18,16 @@
         public function tambah()
         {
             $data['title'] = 'village assistance - tambah';
-            $data['status_penerima'] = ['Belum diterima','Sudah diterima'];
+            $data['status_penerima'] = [
+                [
+                    'value' => 0,
+                    'name' => 'belum diterima'
+                ],
+                [
+                    'value' => 1,
+                    'name' => 'sudah diterima'
+                ]
+            ];
             $data['js'] = [
                 'penerima/tambah.js'
             ];
@@ -93,5 +102,67 @@
 
             echo json_encode($output);
             exit();
+        }
+
+
+        public function storeCreated()
+        {
+            // var_dump($_POST);
+            // var_dump($_FILES);
+            // die;
+            $data['id_bantuan'] = $_POST['id_bantuan'];
+            $data['id_keluarga'] = $_POST['id_keluarga'];
+            $data['status_terima'] = $_POST['status'];
+            $data['tgl_terima'] = strtotime($_POST['tgl_terima']);
+            $data['created_at'] = time();
+            $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
+
+           
+            $file_error = $_FILES['bukti_terima']['error'];
+            $fileName = $_FILES['bukti_terima']['name'];
+            $fileName = explode('.',$fileName);
+            $tmp_name = $_FILES['bukti_terima']['tmp_name'];
+            $_SESSION['set_value'] = $data;
+            $_SESSION['set_value']['bantuan'] = $_POST['bantuan'];
+            $_SESSION['set_value']['periode'] = $_POST['periode'];
+            $_SESSION['set_value']['no_kk'] = $_POST['no_kk'];
+            $_SESSION['set_value']['keluarga'] = $_POST['keluarga'];
+            $file['name'] = $_POST['keluarga'] . $data['id_bantuan'] . '.' . end($fileName);
+            $file['source'] = 'assets/bukti_terima';
+            $file['created_by'] = $_SESSION['userdata']['id_keluarga'];
+            $file['created_at'] = time();
+            if($data['status_terima'] == 1 && $file_error > 0 || $data['status_terima'] == 0 && $file_error == 0)
+            {
+                $_SESSION['form_error'] = [
+                    'file' => 'jika status sudah diterima mohon upload bukti terima dan sebaliknya!'
+                ];
+                $this->redirect(BASE_URL . 'penerimabantuan/tambah');
+            }else{
+
+                $getBantuan = $this->model->getBantuanByKeluargaAndbantuan($data['id_keluarga'],$data['id_bantuan']);
+                if($getBantuan)
+                {
+                    $this->helper->session_destory(['form_error']);
+                    $_SESSION['flash'] = 'Data sudah ada!';
+                    $this->redirect(BASE_URL . 'penerimabantuan/tambah');
+                }else{
+                    $data['id_bukti_terima'] = $this->model->insert_bukti_terima($file);
+
+                    move_uploaded_file($tmp_name,$file['source'] . '/' . $file['name']);
+
+                    if($this->model->insert($data) > 0)
+                    {
+                        $_SESSION['flash'] = 'berhasil ditambahkan';
+                        $this->helper->session_destory(['form_error','set_value']);
+                        $this->redirect(BASE_URL . 'penerimabantuan');
+                    }else{
+                        $_SESSION['flash'] = 'gagal ditambahkan';
+                        $this->helper->session_destory(['form_error','set_value']);
+                        $this->redirect(BASE_URL . 'penerimabantuan');
+                    }
+
+                }
+
+            }
         }
     }

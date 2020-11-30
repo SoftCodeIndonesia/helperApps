@@ -6,7 +6,23 @@ $('.input-modal').click(function () {
     $(target).modal('show');
 });
 
+$('#btn-simpan').click(function (e) {
 
+    if ($('input[name="bantuan"]').val() == '') {
+        $('#alert-jenis-bantuan').append("jenis bantuan harus diisi!");
+        e.preventDefault();
+    } else if ($('input[name="periode"]').val() == '') {
+        $('#alert-periode').append('periode harus diisi!');
+        e.preventDefault();
+    } else if ($('input[name="no_kk"').val() == '') {
+        $('#alert-nokk').append('pilih nomor KK!');
+        e.preventDefault();
+    } else if ($('input[name="keluarga"').val() == '') {
+        $('#alert-keluarga').append('pilih keluarga!');
+        e.preventDefault();
+    }
+
+});
 
 
 $('#bukti_terima').change(function () {
@@ -83,6 +99,20 @@ function dataTablesPenduduk() {
             "url": base_url + "/penerimabantuan/getData",
             "type": "POST"
         },
+    });
+}
+
+var flash = $('input[name="flash"]').val();
+if (flash) {
+    swal("Success!", "Data berhasil " + flash + "!", "success");
+    $.ajax({
+        type: "POST",
+        url: base_url + "ConfigSet/destroy_session",
+        data: {
+            session: "flash"
+        },
+        dataType: "json",
+
     });
 }
 
