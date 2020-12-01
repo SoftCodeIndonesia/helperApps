@@ -12,7 +12,51 @@
         public function index()
         {
             $data['title'] = 'village assistance - catatan penerima bantuan';
+            $data['js'] = [
+                'penerima/index.js'
+            ];
             $this->view('penerima_bantuan/index',$data);
+        }
+
+        public function getAllData(){
+            $penerima = $this->model->getAllData();
+            $penerima_bantuan = [];
+            $no = 1;
+            foreach ($penerima as $value) {
+                $data = [];
+
+                $linkUbah = '<a href="' . BASE_URL . 'Pekerjaan/edit/'. $value['id_pekerjaan'] .'" class="btn btn-sm btn-warning">ubah</a>';
+                $linkHapus = '<a href="' . BASE_URL . 'Pekerjaan/delete/'. $value['id_pekerjaan'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_pekerjaan'].'">hapus</a>';
+                $linkLocation = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">lihat lokasi</a>';
+                $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
+                $data[] = "<th>". $no++ ."</th>";
+                $data[] = "<th>".$value['jenis_bantuan']."</th>";
+                $data[] = "<th>".date('d-M-Y',$value['periode'])."</th>";
+                $data[] = "<th>".$value['no_kk']."</th>";
+                $data[] = "<th>".$value['nama_keluarga']."</th>";
+                $data[] = "<th>".$value['pekerjaan']."</th>";
+                $data[] = "<th>".$value['status_terima'] == 1 ? "sudah diterima" : "belum diterima"."</th>";
+                $data[] = "<th>". date('d-M-Y',$value['tgl_terima']) ."</th>";
+                $data[] = "<th>".$value['id_bukti_terima']."</th>";
+                $data[] = "<th>".$value['created_by']."</th>";
+                $data[] = "<th>".date('d-M-Y',$value['created_at'])."</th>";
+                if(!empty($_SESSION['userdata'])){
+                    $data[] = "<th class='text-center'>" . $linkUbah ." ". $linkHapus. " " . $linkLocation . "</th>";
+                }else{
+                    $data[] = "<th>".$linkLogin."</th>";
+                }
+                $penerima_bantuan[] = $data;
+            }
+
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => count($penerima_bantuan),
+                "recordsFiltered" => $this->model("PekerjaanModel")->count_filtered(),
+                "data" => $penerima_bantuan,
+            );
+            
+            echo json_encode($output);
+            exit();
         }
 
         public function tambah()

@@ -50,6 +50,23 @@
                 <input type="text" class="form-control" value="<?= $data['keluarga']['alamat'] ?>" id="alamat"  name="alamat" autocomplete="off" placeholder="Masukan alamat" required>
             </div>
         </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label for="rt">Koordinat Latitude</label>
+                <input type="text" class="form-control" value="<?= $this->helper->set_value('rt') ?>" id="lat" name="lat" autocomplete="off" placeholder="Masukan latitidue" required>
+            </div>
+            <div class="form-group  col-sm-6">
+                <label for="rw">Koordinat longitude</label>
+                <input type="text" value="<?= $this->helper->set_value('rw') ?>" class="form-control" id="lng" name="lng" autocomplete="off" placeholder="Masukan longitude" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="map">
+                
+                </div>
+            </div>
+        </div>
     
   </div>
   <div class="card-footer">

@@ -61,7 +61,7 @@
 
         public function insert($data)
         {
-            $query = "INSERT INTO keluarga VALUES (null, :rules_id, :no_kk, :id_pekerjaan, :kepala_keluarga, :jumlah_keluarga, :jumlah_anak, :rt, :rw, :alamat, :pass, :created_at, :created_by)";
+            $query = "INSERT INTO keluarga VALUES (null, :rules_id, :no_kk, :id_pekerjaan, :kepala_keluarga, :jumlah_keluarga, :jumlah_anak, :rt, :rw, :alamat, :lat,:lng, :pass, :created_at, :created_by)";
             
             $this->db->query($query);
             $this->db->bind('rules_id',$data['rules_id']);
@@ -73,6 +73,8 @@
             $this->db->bind('rt',$data['rt']);
             $this->db->bind('rw',$data['rw']);
             $this->db->bind('alamat',$data['alamat']);
+            $this->db->bind('lat',$data['lat']);
+            $this->db->bind('lng',$data['lng']);
             $this->db->bind('pass',$data['pass']);
             $this->db->bind('created_at',$data['created_at']);
             $this->db->bind('created_by',$data['created_by']);
@@ -110,7 +112,7 @@
 
         public function update($data,$id_keluarga)
         {
-            $query = "UPDATE keluarga SET no_kk = :no_kk, id_pekerjaan = :id_pekerjaan, kepala_keluarga = :kepala_keluarga, jumlah_keluarga = :jumlah_keluarga, jumlah_anak = :jumlah_anak, rt = :rt, rw = :rw, alamat = :alamat, created_at = :created_at, created_by = :created_by WHERE id_keluarga = :id_keluarga";
+            $query = "UPDATE keluarga SET no_kk = :no_kk, id_pekerjaan = :id_pekerjaan, kepala_keluarga = :kepala_keluarga, jumlah_keluarga = :jumlah_keluarga, jumlah_anak = :jumlah_anak, rt = :rt, rw = :rw, alamat = :alamat, lat = :lat, lng = :lng, created_at = :created_at, created_by = :created_by WHERE id_keluarga = :id_keluarga";
             
             $this->db->query($query);
             $this->db->bind('no_kk', $data['no_kk']);
@@ -121,6 +123,8 @@
             $this->db->bind('rt',$data['rt']);
             $this->db->bind('rw',$data['rw']);
             $this->db->bind('alamat',$data['alamat']);
+            $this->db->bind('lat',$data['lat']);
+            $this->db->bind('lng',$data['lng']);
             $this->db->bind('created_at',$data['created_at']);
             $this->db->bind('created_by',$data['created_by']);
             $this->db->bind('id_keluarga',$id_keluarga);

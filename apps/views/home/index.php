@@ -3,6 +3,13 @@
                         <ol class="breadcrumb mb-4 mt-4">
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div id="map">
+                                    
+                                </div>
+                            </div>
+                        </div>
                         <!-- <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">

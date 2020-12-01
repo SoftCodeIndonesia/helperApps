@@ -4,9 +4,48 @@
     {
         private $db;
         private $table = 'penerima_bantuan';
+        private $column_search = ['kb.name','katban.name','pb.status_terima'];
+
         public function __construct()
         {
             $this->db = new Database;
+        }
+
+        public function getAllData()
+        {
+            $query = "SELECT *,katban.name as jenis_bantuan,kel.no_kk as nomer_kk,kel.kepala_keluarga as nama_keluarga,kelu.kepala_keluarga as created_by,pek.name as pekerjaan, kb.periode as periose FROM penerima_bantuan pb LEFT JOIN bantuan kb ON pb.id_bantuan = kb.id_bantuan LEFT JOIN kategori_bantuan katban ON katban.id_kategori_bantuan = kb.id_kategori_bantuan LEFT JOIN keluarga kel ON kel.id_keluarga = pb.id_keluarga LEFT JOIN pekerjaan pek ON pek.id_pekerjaan = kel.id_pekerjaan LEFT JOIN bukti_terima buk ON buk.id_bukti_terima = pb.id_bukti_terima LEFT JOIN keluarga kelu ON kelu.id_keluarga = pb.created_by";
+
+            if($_POST['search']['value'] !== '')
+            {
+                $query = $query . " WHERE ";
+                foreach ($this->column_search as $key => $column) {
+                    $explode = explode('.',$column);
+                    if($key + 1 == count($this->column_search)){
+                        $query = $query . " from_unixtime(". $column .",'%d %M %Y') LIKE CONCAT(:" . $explode[1] . ")";
+                    }else{
+                        $query = $query . $column . " LIKE CONCAT(:" . $explode[1] . ") OR ";
+                    }
+                    
+                }
+            }
+
+            $query = $query . " ORDER BY  pek.id_pekerjaan ASC";
+            $this->db->query($query);
+            
+            if(strlen($_POST['search']['value']) > 0)
+            {
+                foreach ($this->column_search as $column) {
+                    $explode = explode('.',$column);
+                    $this->db->bind($explode[1], '%'.$_POST['search']['value'].'%');
+                }
+            }
+            return $this->db->resultSet();
+        }
+
+        public function count_filtered()
+        {
+            $this->db->query('SELECT * FROM ' . $this->table);
+            return $this->db->num_rows();
         }
 
         public function getBantuanByKeluargaAndbantuan($id_keluarga,$id_bantuan)

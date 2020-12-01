@@ -14,6 +14,10 @@
         <script>
             var base_url = "<?= BASE_URL; ?>";
         </script>
+        <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChYI-4Lc6ETcokhv1tUSQc4Mq0GKWnMes&callback=initMap&libraries=&v=weekly"
+        defer
+        ></script>
         <script src="<?= BASE_URL; ?>assets/js/jquery-3.5.1.min.js"></script>
         <script src="<?= BASE_URL; ?>assets/js/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
@@ -30,5 +34,6 @@
         <script src="<?= BASE_URL; ?>assets/js/<?= $js ?>"></script>
         <?php endforeach; ?>
         <?php endif; ?>
+        
     </body>
 </html>

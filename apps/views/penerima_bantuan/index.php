@@ -34,13 +34,15 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="table-penerima" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Jenis bantuan</th>
+                            <th>periode</th>
                             <th>No KK</th>
                             <th>Keluarga</th>
+                            <th>pekerjaan</th>
                             <th>Status penerimaan</th>
                             <th>Tangggal terima</th>
                             <th>Bukti terima</th>

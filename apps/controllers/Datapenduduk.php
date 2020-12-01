@@ -35,6 +35,7 @@
                 $linkUbah = '<a href="' . BASE_URL . 'datapenduduk/edit/'. $value['id_keluarga'] .'" class="btn btn-sm btn-warning">ubah</a>';
                 $linkHapus = '<a href="' . BASE_URL . 'datapenduduk/delete/'. $value['id_keluarga'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_keluarga'].'">hapus</a>';
                 $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
+                $linkLocation = '<a href="'.BASE_URL.'location/index/'.$value['lat'].'/'.$value['lng'].'/'.$value['kepala_keluarga'].'" class="btn btn-sm btn-info">lihat lokasi</a>';
                 $penduduk[] = "<th>". $no++ ."</th>";
                 $penduduk[] = "<th>".$value['no_kk']."</th>";
                 $penduduk[] = "<th>".$value['kepala_keluarga']."</th>";
@@ -46,7 +47,7 @@
                 $penduduk[] = "<th>".$value['created_by']."</th>";
                 $penduduk[] = "<th>".$value['created_at']."</th>";
                 if(!empty($_SESSION['userdata'])){
-                    $penduduk[] = "<th>".$linkUbah. " " . $linkHapus." </th>";
+                    $penduduk[] = "<th>".$linkUbah. " " . $linkHapus. " " . $linkLocation . "</th>";
                 }else{
                     $penduduk[] = "<th>".$linkLogin."</th>";
                 }
@@ -95,6 +96,8 @@
                 $data['rw'] = $_POST['rw'];
                 $pekerjaan = htmlspecialchars($_POST['pekerjaan']);
                 $data['alamat'] = "" . htmlspecialchars($_POST['alamat']) . "";
+                $data['lat'] = htmlspecialchars($_POST['lat']);
+                $data['lng'] = htmlspecialchars($_POST['lng']);
                 $data['pass'] = md5('123');
                 $data['created_at'] = (int) time();
                 $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
@@ -183,6 +186,8 @@
             $data['rw'] = $_POST['rw'];
             $pekerjaan = htmlspecialchars($_POST['pekerjaan']);
             $data['alamat'] = "" . htmlspecialchars($_POST['alamat']) . "";
+            $data['lat'] = htmlspecialchars($_POST['lat']);
+                $data['lng'] = htmlspecialchars($_POST['lng']);
             $data['created_at'] = (int) time();
             $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
             $pekerjaan = $this->model('PekerjaanModel')->getByName(strtolower($pekerjaan));
