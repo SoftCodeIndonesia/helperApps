@@ -40,8 +40,6 @@
                 $data[] = "<th>".$value['created_at']."</th>";
                 if(!empty($_SESSION['userdata'])){
                     $data[] = "<th class='text-center'>" . $linkUbah ." ". $linkHapus."</th>";
-                }else{
-                    $data[] = "<th>".$linkLogin."</th>";
                 }
                 $catatan_bantuan[] = $data;
             }

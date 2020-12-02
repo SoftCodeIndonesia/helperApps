@@ -58,6 +58,6 @@
         {
             session_unset();
             session_destroy();
-            $this->redirect(BASE_URL . 'login');
+            $this->redirect(BASE_URL);
         }
     }

@@ -43,7 +43,7 @@
                 if(!empty($_SESSION['userdata'])){
                     $data[] = "<th class='text-center'>" . $linkUbah ." ". $linkHapus. " " . $linkLocation . "</th>";
                 }else{
-                    $data[] = "<th>".$linkLogin."</th>";
+                    $data[] = "<th>" . $linkLocation . "</th>";
                 }
                 $penerima_bantuan[] = $data;
             }

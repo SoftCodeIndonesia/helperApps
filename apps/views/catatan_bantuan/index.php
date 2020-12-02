@@ -29,7 +29,9 @@
                             <th>Deskripsi</th>
                             <th>dibuat oleh</th>
                             <th>dibuat Tgl</th>
+                            <?php if(!empty($_SESSION['userdata'])) : ?>
                             <th>Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
