@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="tgl_terima">Tanggal Terima</label>
-                        <input type="date" class="form-control" id="tgl_terima" name="tgl_terima" placeholder="periode bantuan" required>
+                        <input type="date" class="form-control" id="tgl_terima" value="<?= date('Y-m-d', $this->helper->set_value('tgl_terima')) ?>" name="tgl_terima" placeholder="periode bantuan" required>
                     </div>
                 </div>
                 <div class="row">

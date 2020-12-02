@@ -25,6 +25,30 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                    <label for="exampleInputEmail1">RT</label>
+                    <select class="form-control" id="rt">
+                        <option value=""><== pilih RT ==></option>
+                        <?php foreach($data['rt'] as $value) : ?>
+                        <option value="<?= $value['rt'] ?>"> <?= $value['rt'] ?> </option>
+                        <?php endforeach; ?>
+                    </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                    <label for="exampleInputEmail1">RW</label>
+                    <select class="form-control" id="rw">
+                        <option value=""><== pilih RW ==></option>
+                        <?php foreach($data['rw'] as $value) : ?>
+                        <option value="<?= $value['rw'] ?>"> <?= $value['rw'] ?> </option>
+                        <?php endforeach; ?>
+                    </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="card mb-4">
