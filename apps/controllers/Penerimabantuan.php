@@ -11,6 +11,7 @@
 
         public function index()
         {
+            $this->helper->session_destory(['form_error','set_value']);
             $data['title'] = 'village assistance - catatan penerima bantuan';
             $data['js'] = [
                 'penerima/index.js'
@@ -27,19 +28,29 @@
             foreach ($penerima as $value) {
                 $data = [];
 
-                $linkUbah = '<a href="' . BASE_URL . 'Pekerjaan/edit/'. $value['id_pekerjaan'] .'" class="btn btn-sm btn-warning">ubah</a>';
-                $linkHapus = '<a href="' . BASE_URL . 'Pekerjaan/delete/'. $value['id_pekerjaan'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_pekerjaan'].'">hapus</a>';
-                $linkLocation = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">lihat lokasi</a>';
+                $linkUbah = '<a href="' . BASE_URL . 'penerimabantuan/ubah/'. $value['id_penerima'] .'" class="btn btn-sm btn-warning">ubah</a>';
+                $linkHapus = '<a href="' . BASE_URL . 'penerimabantuan/delete/'. $value['id_penerima'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_penerima'].'">hapus</a>';
+                $linkLocation = '<a href="'.BASE_URL.'location/index/'.$value['lat'].'/'.$value['lng'].'/'.$value['kepala_keluarga'].'" target="_blank" class="btn btn-sm btn-info">lihat lokasi</a>';
                 $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
                 $data[] = "<th>". $no++ ."</th>";
                 $data[] = "<th>".$value['jenis_bantuan']."</th>";
                 $data[] = "<th>".date('d-M-Y',$value['periode'])."</th>";
-                $data[] = "<th>".$value['no_kk']."</th>";
+                $data[] = "<th>".$value['nomer_kk']."</th>";
                 $data[] = "<th>".$value['nama_keluarga']."</th>";
                 $data[] = "<th>".$value['pekerjaan']."</th>";
-                $data[] = "<th>".$value['status_terima'] == 1 ? "sudah diterima" : "belum diterima"."</th>";
+                if($value['status_terima'] == 1){
+                    $data[] = "<th>sudah diterima</th>";
+                }else{
+                    $data[] = "<th>belum diterima</th>";
+                }
+                
                 $data[] = "<th>". date('d-M-Y',$value['tgl_terima']) ."</th>";
-                $data[] = "<th><img src=".$value['source']. '/' . $value['bukti_terima'] ." alt=". $value['id_bukti_terima'] ." class='img-thumbnail'></th>";
+                if($value['id_bukti_terima'] > 0){
+                    $data[] = "<th><img src=".$value['source']. '/' . $value['bukti_terima'] ." alt=". $value['id_bukti_terima'] ." class='img-thumbnail'></th>";
+                }else{
+                    $data[] = "<th><img src='" . BASE_URL ."assets/images/noimage.png' alt='bukti_terima' class='img-thumbnail'></th>";
+                }
+                
                 $data[] = "<th>".$value['created_by']."</th>";
                 $data[] = "<th>".date('d-M-Y',$value['created_at'])."</th>";
                 if(!empty($_SESSION['userdata'])){
@@ -61,12 +72,24 @@
             exit();
         }
 
-        public function filterByRtrW()
+        public function delete_file($id_bukti_terima,$id_penerima){
+            $bukti_terima = $this->model->getFileById($id_bukti_terima);
+
+            if($this->model->delete_file($id_bukti_terima) > 0){
+                unlink($bukti_terima['source'] . '/' . $bukti_terima['name']);
+                $this->redirect(BASE_URL .  'penerimabantuan/ubah/' . $id_penerima);
+            }else{
+                $_SESSION['flash'] = 'Data gagal diubah!';
+                $this->redirect(BASE_URL .  'penerimabantuan/ubah/' . $id_penerima);
+            }
+
+            
+        }
+
+        public function filterData()
         {
-            $rt = $_POST['rt'];
-            $rw = $_POST['rw'];
             // var_dump($_POST);
-            $penerima = $this->model->getByRtRw($rt,$rw);
+            $penerima = $this->model->filter($_POST['rt'],$_POST['rw'],$_POST['id_bantuan']);
             $penerima_bantuan = [];
             $no = 1;
             foreach ($penerima as $value) {
@@ -74,7 +97,7 @@
 
                 $linkUbah = '<a href="' . BASE_URL . 'Pekerjaan/edit/'. $value['id_pekerjaan'] .'" class="btn btn-sm btn-warning">ubah</a>';
                 $linkHapus = '<a href="' . BASE_URL . 'Pekerjaan/delete/'. $value['id_pekerjaan'] .'" class="btn btn-sm btn-danger" id="btn-delete" data-id="'.$value['id_pekerjaan'].'">hapus</a>';
-                $linkLocation = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">lihat lokasi</a>';
+                $linkLocation = '<a href="'.BASE_URL.'location/index/'.$value['lat'].'/'.$value['lng'].'/'.$value['kepala_keluarga'].'" class="btn btn-sm btn-info">lihat lokasi</a>';
                 $linkLogin = '<a href="'.BASE_URL.'login" class="btn btn-sm btn-info">Login</a>';
                 $data[] = "<th>". $no++ ."</th>";
                 $data[] = "<th>".$value['jenis_bantuan']."</th>";
@@ -82,7 +105,11 @@
                 $data[] = "<th>".$value['no_kk']."</th>";
                 $data[] = "<th>".$value['nama_keluarga']."</th>";
                 $data[] = "<th>".$value['pekerjaan']."</th>";
-                $data[] = "<th>".$value['status_terima'] == 1 ? "sudah diterima" : "belum diterima"."</th>";
+                if($value['status_terima'] == 1){
+                    $data[] = "<th>sudah diterima</th>";
+                }else{
+                    $data[] = "<th>belum diterima</th>";
+                }
                 $data[] = "<th>". date('d-M-Y',$value['tgl_terima']) ."</th>";
                 $data[] = "<th><img src=".$value['source']. '/' . $value['bukti_terima'] ." alt=". $value['id_bukti_terima'] ." class='img-thumbnail'></th>";
                 $data[] = "<th>".$value['created_by']."</th>";
@@ -101,7 +128,6 @@
                 "recordsFiltered" => $this->model("PekerjaanModel")->count_filtered(),
                 "data" => $penerima_bantuan,
             );
-            
             echo json_encode($output);
             exit();
         }
@@ -126,7 +152,7 @@
             $this->view('penerima_bantuan/tambah',$data);
         }
 
-        public function ubah($id_bantuan)
+        public function ubah($id_penerima)
         {
             $data['title'] = 'village assistance - ubah data';
             $data['status_penerima'] = [
@@ -142,7 +168,7 @@
             $data['js'] = [
                 'penerima/tambah.js'
             ];
-            
+            $data['penerima'] = $this->model->getById($id_penerima);
             $this->view('penerima_bantuan/ubah',$data);
         }
 
@@ -221,6 +247,7 @@
             // var_dump($_POST);
             // var_dump($_FILES);
             // die;
+            unset($_SESSION['flash']);
             $data['id_bantuan'] = $_POST['id_bantuan'];
             $data['id_keluarga'] = $_POST['id_keluarga'];
             $data['status_terima'] = $_POST['status'];
@@ -257,6 +284,87 @@
                     $_SESSION['flash'] = 'Data sudah ada!';
                     $this->redirect(BASE_URL . 'penerimabantuan/tambah');
                 }else{
+                    if($file_error == 0){
+                        $data['id_bukti_terima'] = $this->model->insert_bukti_terima($file);
+
+                        move_uploaded_file($tmp_name,$file['source'] . '/' . $file['name']);
+                    }else{
+                        $data['id_bukti_terima'] = 0;
+                    }
+
+                    if($this->model->insert($data) > 0)
+                    {
+                        $_SESSION['flash'] = 'berhasil ditambahkan';
+                        $this->helper->session_destory(['form_error','set_value']);
+                        $this->redirect(BASE_URL . 'penerimabantuan');
+                    }else{
+                        $_SESSION['flash'] = 'gagal ditambahkan';
+                        $this->helper->session_destory(['form_error','set_value']);
+                        $this->redirect(BASE_URL . 'penerimabantuan');
+                    }
+
+                }
+
+            }
+        }
+
+        public function storeUpdate($id_penerima)
+        {
+            unset($_SESSION['flash']);
+            $data['id_bantuan'] = $_POST['id_bantuan'];
+            $data['id_keluarga'] = $_POST['id_keluarga'];
+            $data['status_terima'] = $_POST['status'];
+            $data['tgl_terima'] = strtotime($_POST['tgl_terima']);
+            $data['created_at'] = time();
+            $data['created_by'] = $_SESSION['userdata']['id_keluarga'];
+
+           
+            $file_error = $_FILES['bukti_terima']['error'];
+            $fileName = $_FILES['bukti_terima']['name'];
+            $fileName = explode('.',$fileName);
+            $tmp_name = $_FILES['bukti_terima']['tmp_name'];
+            $_SESSION['set_value'] = $data;
+            $_SESSION['set_value']['bantuan'] = $_POST['bantuan'];
+            $_SESSION['set_value']['periode'] = $_POST['periode'];
+            $_SESSION['set_value']['no_kk'] = $_POST['no_kk'];
+            $_SESSION['set_value']['keluarga'] = $_POST['keluarga'];
+            $file['name'] = $_POST['keluarga'] . $data['id_bantuan'] . '.' . end($fileName);
+            $file['source'] = 'assets/bukti_terima';
+            $file['created_by'] = $_SESSION['userdata']['id_keluarga'];
+            $file['created_at'] = time();
+            if($data['status_terima'] == 1 && $file_error > 0 || $data['status_terima'] == 0 && $file_error == 0)
+            {
+                $_SESSION['form_error'] = [
+                    'file' => 'jika status sudah diterima mohon upload bukti terima dan sebaliknya!'
+                ];
+                $this->redirect(BASE_URL . 'penerimabantuan/tambah');
+            }else{
+
+                $getBantuan = $this->model->getBantuanByKeluargaAndbantuan($data['id_keluarga'],$data['id_bantuan']);
+                if($getBantuan)
+                {
+                    if($getBantuan['id_penerima'] != $id_penerima){
+                        $this->helper->session_destory(['form_error']);
+                        $_SESSION['flash'] = 'Data sudah ada!';
+                        $this->redirect(BASE_URL . 'penerimabantuan/tambah');
+                    }else{
+                        $data['id_bukti_terima'] = $this->model->insert_bukti_terima($file);
+
+                        move_uploaded_file($tmp_name,$file['source'] . '/' . $file['name']);
+
+                        if($this->model->update($data,$id_penerima) > 0)
+                        {
+                            $_SESSION['flash'] = 'berhasil diubah';
+                            $this->helper->session_destory(['form_error','set_value']);
+                            $this->redirect(BASE_URL . 'penerimabantuan');
+                        }else{
+                            $_SESSION['flash'] = 'gagal diubah';
+                            $this->helper->session_destory(['form_error','set_value']);
+                            $this->redirect(BASE_URL . 'penerimabantuan');
+                        }
+                    }
+                    
+                }else{
                     $data['id_bukti_terima'] = $this->model->insert_bukti_terima($file);
 
                     move_uploaded_file($tmp_name,$file['source'] . '/' . $file['name']);
@@ -274,6 +382,19 @@
 
                 }
 
+            }
+        }
+
+        public function delete(){
+            $id_penerima = $_POST['id_penerima'];
+            $penerima = $this->model->getById($id_penerima);
+            $bukti_terima = $this->model->getFileById($penerima['id_bukti_terima']);
+            if($this->model->delete_file($penerima['id_bukti_terima']) > 0){
+                unlink($bukti_terima['source'] . '/' . $bukti_terima['name']);
+                echo json_encode($this->model->delete($penerima['id_penerima']));
+
+            }else{
+                echo json_encode($this->model->delete($penerima['id_penerima']));
             }
         }
     }

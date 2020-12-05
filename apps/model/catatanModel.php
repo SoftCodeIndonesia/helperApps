@@ -31,7 +31,7 @@
                 }
             }
 
-            $query = $query . " ORDER BY ban.id_bantuan ASC";
+            $query = $query . " GROUP BY ban.id_bantuan ORDER BY ban.id_bantuan ASC";
             $this->db->query($query);
             if(!empty($_POST['search']['value']))
             {
