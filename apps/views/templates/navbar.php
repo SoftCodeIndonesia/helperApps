@@ -1,5 +1,5 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand" href="<?= BASE_URL; ?>dist/index.html">Village Assistance</a>
+            <a class="navbar-brand" href="<?= BASE_URL; ?>dist/index.html">SIG Penduduk Miskin Desa Pegaden Tengah</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="<?= BASE_URL; ?>dist/#"><i class="fas fa-bars"></i></button>
            
             <ul class="navbar-nav ml-auto ">

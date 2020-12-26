@@ -1,5 +1,5 @@
 <?php
-
+ use Dompdf\Dompdf;
     class Penerimabantuan extends Controller
     {
         private $model;
@@ -7,6 +7,91 @@
         {
             $this->helper = new Helper;
             $this->model = $this->model('penerimaModel');
+        }
+
+        public function printPdf()
+        {
+           
+            $dompdf = new Dompdf();
+            $penerima = $this->model->filter($_POST['rt'],$_POST['rw'],$_POST['id_bantuan']);
+            
+            // $connect = new Database; // Instance Class Database
+            
+            // $header = mysqli_query($connect->getMySQL(), "SHOW columns FROM users");
+    
+            $html = '<center><h3>Penerima bantuan</h3></center><br/>';
+            $html .= '<table class="table table-bordered" border="1" id="table-penerima" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Jenis bantuan</th>
+                    <th>periode</th>
+                    <th>No KK</th>
+                    <th>Keluarga</th>
+                    <th>pekerjaan</th>
+                    <th>Status penerimaan</th>
+                    <th>Tangggal terima</th>
+                    <th>Bukti terima</th>
+                    <th>Dibuat oleh</th>
+                    <th>Dibuat pada</th>
+                </tr>
+            </thead>';
+            $html .= ' <tbody>';
+            
+            
+            $no = 1;
+            foreach ($penerima as $key => $value) {
+                $html .= '<tr>';
+                $html .= "<td>". $no++ ."</td>";
+                $html .= "<td>".$value['jenis_bantuan']."</td>";
+                $html .= "<td>".date('d-M-Y',$value['periode'])."</td>";
+                $html .= "<td>".$value['nomer_kk']."</td>";
+                $html .= "<td>".$value['nama_keluarga']."</td>";
+                $html .= "<td>".$value['pekerjaan']."</td>";
+                if($value['status_terima'] == 1){
+                    $html .= "<th>sudah diterima</th>";
+                }else{
+                    $html .= "<th>belum diterima</th>";
+                }
+                
+                $html .= "<th>". date('d-M-Y',$value['tgl_terima']) ."</th>";
+                if($value['id_bukti_terima'] > 0){
+                    if(file_exists($value['source']. '/' . $value['bukti_terima'])){
+                        $html .= "<th><img src=".$value['source']. '/' . $value['bukti_terima'] ."class='img-thumbnail'></th>";
+                    }else{
+                        $html .= "<th> </th>";    
+                    }
+                }else{
+                    $html .= "<th> </th>";
+                }
+                
+                $html .= "<th>".$value['created_by']."</th>";
+                $html .= "<th>".date('d-M-Y',$value['created_at'])."</th>";
+                $html .= '</tr>';
+            }
+            
+           
+            $html .= '</tbody></table>';
+            
+    
+            // $rsl  = mysqli_query($connect->getMySQL(), "SELECT *  FROM users");
+    
+            // foreach ($rsl as $row) {
+            //     $pdf->Ln();
+            //     foreach ($row as $column)
+            //         $pdf->Cell(45, 10, $column, 1);
+            // }
+            // $pdf->Output();
+            $html .= "</html>";
+            $dompdf->loadHtml($html);
+            // Setting ukuran dan orientasi kertas
+            $dompdf->setPaper('A4', 'landscape');
+            // Rendering dari HTML Ke PDF
+            $dompdf->render();
+
+            $fileName = time();
+            // Melakukan output file Pdf
+            $dompdf->stream($fileName . '.pdf');
         }
 
         public function index()

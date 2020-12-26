@@ -12,6 +12,32 @@ if (flash) {
 
     });
 }
+
+// $('#btn-print').click(function (e) {
+//     e.preventDefault();
+//     var id_bantuan = $('#id_bantuan').val();
+//     var rt = $("#rt").val();
+//     var rw = $("#rw").val();
+
+//     $.ajax({
+//         type: "POST",
+//         url: base_url + "/penerimabantuan/getAllData",
+//         data: {
+//             rt: rt,
+//             rw: rw,
+//             id_bantuan: id_bantuan
+//         },
+//         url: base_url + "penerimabantuan/filterData",
+//         dataType: "json",
+//         success: function (response) {
+//             console.log(response);
+//         }
+//     });
+//     // window.print();
+
+// });
+
+
 function dataTablesCreated() {
     return $('#table-penerima').DataTable({
         orderCellsTop: true,

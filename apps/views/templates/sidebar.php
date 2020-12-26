@@ -57,6 +57,14 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-fw fa-clipboard-list"></i></div>
                                 Data penduduk
                             </a>
+                            <a class="nav-link" href="<?= BASE_URL; ?>Pekalongan">
+                                <div class="sb-nav-link-icon"><i class="fas fa-fw fa-clipboard-list"></i></div>
+                                Kab.Pekalongan
+                            </a>
+                            <a class="nav-link" href="<?= BASE_URL; ?>UU">
+                                <div class="sb-nav-link-icon"><i class="fas fa-fw fa-clipboard-list"></i></div>
+                                UU Penerima Bantuan
+                            </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="<?= BASE_URL; ?>Kategoribantuan">Kategori bantuan</a>

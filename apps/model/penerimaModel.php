@@ -113,17 +113,17 @@
         {
             
             // WHERE kel.rt = :rt AND kel.rw = :rw ORDER BY pb.id_penerima
-            $query = "SELECT *,katban.name as jenis_bantuan,buk.name as bukti_terima,kel.no_kk as nomer_kk,kel.kepala_keluarga as nama_keluarga,kel.rt as rt, kel.rw as rw,kelu.kepala_keluarga as created_by,pek.name as pekerjaan, kb.periode as periose FROM penerima_bantuan pb LEFT JOIN bantuan kb ON pb.id_bantuan = kb.id_bantuan LEFT JOIN kategori_bantuan katban ON katban.id_kategori_bantuan = kb.id_kategori_bantuan LEFT JOIN keluarga kel ON kel.id_keluarga = pb.id_keluarga LEFT JOIN pekerjaan pek ON pek.id_pekerjaan = kel.id_pekerjaan LEFT JOIN bukti_terima buk ON buk.id_bukti_terima = pb.id_bukti_terima LEFT JOIN keluarga kelu ON kelu.id_keluarga = pb.created_by WHERE ";
+            $query = "SELECT *,katban.name as jenis_bantuan,buk.name as bukti_terima,kel.no_kk as nomer_kk,kel.kepala_keluarga as nama_keluarga,kel.rt as rt, kel.rw as rw,kelu.kepala_keluarga as created_by,pek.name as pekerjaan, kb.periode as periose FROM penerima_bantuan pb LEFT JOIN bantuan kb ON pb.id_bantuan = kb.id_bantuan LEFT JOIN kategori_bantuan katban ON katban.id_kategori_bantuan = kb.id_kategori_bantuan LEFT JOIN keluarga kel ON kel.id_keluarga = pb.id_keluarga LEFT JOIN pekerjaan pek ON pek.id_pekerjaan = kel.id_pekerjaan LEFT JOIN bukti_terima buk ON buk.id_bukti_terima = pb.id_bukti_terima LEFT JOIN keluarga kelu ON kelu.id_keluarga = pb.created_by";
 
             if($rt !== ''){
-                $query = $query . 'kel.rt = :rt';
+                $query = $query . ' WHERE kel.rt = :rt';
             }
 
             if($rw !== ''){
                 if($rt !== ''){
                     $query = $query . 'AND kel.rw = :rw';
                 }else{
-                    $query = $query . 'kel.rw = :rw';
+                    $query = $query . ' WHERE kel.rw = :rw';
                 }
             }
 
@@ -134,8 +134,6 @@
                     $query = $query . 'kb.id_bantuan = :id_bantuan';
                 }
             }
-
-
             $this->db->query($query);
             if($rt !== ''){
                 $this->db->bind('rt',$rt);
